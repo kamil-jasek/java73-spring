@@ -6,11 +6,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomerService {
 
-    @Autowired
-    private CustomerDao customerDao;
+    // @Autowired - not recommended
+    private final CustomerDao customerDao;
+
+//    @Autowired - optional
+    CustomerService(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
 
     public void hello() {
         System.out.println("hello service");
         customerDao.helloFromDao();
     }
+
+//    @Autowired  - not recommended
+//    public void setCustomerDao(CustomerDao customerDao) {
+//        this.customerDao = customerDao;
+//    }
 }
