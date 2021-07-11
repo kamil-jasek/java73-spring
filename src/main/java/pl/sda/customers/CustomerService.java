@@ -10,6 +10,7 @@ public class CustomerService {
     private CustomerDao customerDao;
 
     public void hello() {
-        System.out.println("Hello");
+        System.out.println("hello service");
+        customerDao.helloFromDao();
     }
 }
