@@ -8,11 +8,18 @@ public class CustomerService {
 
     // @Autowired - not recommended
     private final CustomerDao customerDao;
+//    private SomeBean someBean;
 
 //    @Autowired - optional
     CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
+
+//    @Autowired
+//    CustomerService(CustomerDao customerDao, SomeBean bean) {
+//        this.customerDao = customerDao;
+//        this.someBean = bean;
+//    }
 
     public void hello() {
         System.out.println("hello service");
