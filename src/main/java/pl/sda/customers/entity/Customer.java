@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -26,7 +28,7 @@ public abstract class Customer {
 
     private String email;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private List<Address> addresses;
 
@@ -49,6 +51,12 @@ public abstract class Customer {
 
     public List<Address> getAddresses() {
         return new ArrayList<>(addresses);
+    }
+
+    public void addAddress(Address address) {
+        if (!addresses.contains(address)) {
+            addresses.add(address);
+        }
     }
 
     @Override
