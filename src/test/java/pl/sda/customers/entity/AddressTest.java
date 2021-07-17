@@ -3,11 +3,9 @@ package pl.sda.customers.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 class AddressTest extends EntityBaseTest {
 
-    @Transactional
     @Test
     void shouldSaveAddressInDatabase() {
         // given
