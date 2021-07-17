@@ -1,11 +1,15 @@
 package pl.sda.customers.entity;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -46,8 +50,23 @@ class CustomerRepositoryTest {
         assertEquals(customer.getAddresses(), readCustomer.getAddresses());
     }
 
-    private void saveAndClearCache(Company customer) {
-        customerRepository.saveAndFlush(customer);
+    @Test
+    void shouldSortCustomersByEmail() {
+        // given
+        final var customer1 = new Company("abc@ab.pl", "Test S.A.", "PL9393933");
+        final var customer2 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
+        final var customer3 = new Company("ert@ab.pl", "ABC S.A.", "PL203020222");
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var sortedCustomers = customerRepository.findAll(Sort.by("email"));
+
+        // then
+        assertEquals(List.of(customer1, customer3, customer2), sortedCustomers);
+    }
+
+    private void saveAndClearCache(Customer ...customers) {
+        customerRepository.saveAllAndFlush(asList(customers));
         em.clear();
     }
 }
