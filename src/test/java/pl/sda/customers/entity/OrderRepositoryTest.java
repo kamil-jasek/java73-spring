@@ -54,4 +54,21 @@ class OrderRepositoryTest extends RepositoryBaseTest<OrderRepository> {
         // then
         assertEquals(List.of(order2, order3), orders);
     }
+
+    @Test
+    void shouldFindOrdersInProcessing() {
+        // given
+        final var order1 = new Order(List.of(new Product("abc", 1., 1)));
+        final var order2 = new Order(List.of(new Product("bca", 2., 1)));
+        final var order3 = new Order(List.of(new Product("cda", 3., 1)));
+        order2.sent();
+        order3.sent();
+        saveAndClearCache(order1, order2, order3);
+
+        // when
+        final var orders = repository.fetchOrdersInProcessing();
+
+        // then
+        assertEquals(List.of(order2, order3), orders);
+    }
 }
