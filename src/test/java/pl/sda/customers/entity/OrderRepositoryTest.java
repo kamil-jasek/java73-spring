@@ -71,4 +71,33 @@ class OrderRepositoryTest extends RepositoryBaseTest<OrderRepository> {
         // then
         assertEquals(List.of(order2, order3), orders);
     }
+
+    @Test
+    void shouldCountDeliveredOrders() {
+        // given
+        final var order1 = new Order(List.of(new Product("abc", 1., 1)));
+        final var order2 = new Order(List.of(new Product("bca", 2., 1)));
+        final var order3 = new Order(List.of(new Product("cda", 3., 1)));
+        order2.sent();
+        order2.markDelivered();
+        order3.sent();
+        order3.markDelivered();
+        saveAndClearCache(order1, order2, order3);
+
+        // then
+        assertEquals(2, repository.countOrdersInDeliveredStatus());
+    }
+
+    @Test
+    void shouldSumOrdersValueInWaitingStatus() {
+        // given
+        final var order1 = new Order(List.of(new Product("abc", 5., 2)));
+        final var order2 = new Order(List.of(new Product("bca", 3., 3)));
+        final var order3 = new Order(List.of(new Product("cda", 1., 1)));
+        order3.sent();
+        saveAndClearCache(order1, order2, order3);
+
+        // then
+        assertEquals(19., repository.sumOrdersValueInWaitingStatus());
+    }
 }

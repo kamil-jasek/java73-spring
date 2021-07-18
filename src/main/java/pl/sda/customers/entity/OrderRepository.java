@@ -11,4 +11,10 @@ interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("from Order o join fetch o.products where o.status in ('PAID', 'DELIVERED', 'SENT')")
     List<Order> fetchOrdersInProcessing();
+
+    @Query("select count(o) from Order o where o.status = 'DELIVERED'")
+    int countOrdersInDeliveredStatus();
+
+    @Query("select sum(p.price * p.quantity) from Order o join o.products p where o.status = 'WAITING'")
+    double sumOrdersValueInWaitingStatus();
 }

@@ -63,6 +63,13 @@ public final class Order {
         status = OrderStatus.CANCELED;
     }
 
+    void markDelivered() {
+        if (!status.equals(OrderStatus.SENT)) {
+            throw new IllegalStateException("Invalid order status: " + status);
+        }
+        status = OrderStatus.DELIVERED;
+    }
+
     private void validateIsWaiting() {
         if (!status.equals(OrderStatus.WAITING)) {
             throw new IllegalStateException("Invalid order status");
