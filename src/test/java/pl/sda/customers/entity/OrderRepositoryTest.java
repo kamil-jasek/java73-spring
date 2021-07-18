@@ -100,4 +100,17 @@ class OrderRepositoryTest extends RepositoryBaseTest<OrderRepository> {
         // then
         assertEquals(19., repository.sumOrdersValueInWaitingStatus());
     }
+
+    @Test
+    void shouldListUniqueProductNames() {
+        // given
+        final var order1 = new Order(List.of(new Product("abc", 5., 2)));
+        final var order2 = new Order(List.of(new Product("bca", 3., 3)));
+        final var order3 = new Order(List.of(new Product("cda", 1., 1)));
+        final var order4 = new Order(List.of(new Product("cda", 1., 1)));
+        saveAndClearCache(order1, order2, order3, order4);
+
+        // when
+        assertEquals(List.of("abc", "bca", "cda"), repository.listAllUniqueProductNames());
+    }
 }

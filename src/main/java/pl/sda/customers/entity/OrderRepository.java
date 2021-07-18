@@ -17,4 +17,7 @@ interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("select sum(p.price * p.quantity) from Order o join o.products p where o.status = 'WAITING'")
     double sumOrdersValueInWaitingStatus();
+
+    @Query("select distinct p.name from Product p order by p.name")
+    List<String> listAllUniqueProductNames();
 }
