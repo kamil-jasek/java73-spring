@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 interface OrderRepository extends JpaRepository<Order, UUID> {
 
-    List<Order> findAllByStatus(OrderStatus status); // select o.* from orders o where o.status like %?1
+    List<Order> findAllByStatus(OrderStatus status); // select o.* from orders o where o.status = ?
 }

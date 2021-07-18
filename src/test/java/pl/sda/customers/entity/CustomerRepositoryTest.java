@@ -65,4 +65,37 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
         // then
         assertEquals(List.of(customer1, customer2), customers);
     }
+
+    @Test
+    void shouldFindCustomersByContainingTextInEmail() {
+        // given
+        final var customer1 = new Company("abcd@ab.pl", "Test S.A.", "PL9393933");
+        final var customer2 = new Person("bcd@ab.pl", "Jan", "Kowalski", "9203023020");
+        final var customer3 = new Company("cda@qw.pl", "ABC S.A.", "PL203020222");
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var customers = repository.findAllByEmailIgnoreCaseContains("AB.pl");
+
+        // then
+        assertEquals(List.of(customer1, customer2), customers);
+    }
+
+    @Test
+    void shouldFindCustomersFromCity() {
+        // given
+        final var customer1 = new Company("abc@ab.pl", "Test S.A.", "PL9393933");
+        customer1.addAddress(new Address("str", "Warszawa", "01-200", "PL"));
+        final var customer2 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
+        customer2.addAddress(new Address("str", "Kraków", "03-400", "PL"));
+        final var customer3 = new Company("ert@ab.pl", "ABC S.A.", "PL203020222");
+        customer3.addAddress(new Address("str", "Warszawa", "01-300", "PL"));
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var customers = repository.findAllByAddressesCityIgnoreCase("warszawa");
+
+        // then
+        assertEquals(List.of(customer1, customer3), customers);
+    }
 }
