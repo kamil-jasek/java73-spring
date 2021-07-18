@@ -67,6 +67,21 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
     }
 
     @Test
+    void shouldFilterByPersonName() {
+        // given
+        final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
+        final var customer2 = new Person("xyz@ab.pl", "Janek", "Kowal", "9203023020");
+        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var customers = repository.filterByPersonName("jan%", "kowal%");
+
+        // then
+        assertEquals(List.of(customer1, customer2), customers);
+    }
+
+    @Test
     void shouldFindCustomersByContainingTextInEmail() {
         // given
         final var customer1 = new Company("abcd@ab.pl", "Test S.A.", "PL9393933");
