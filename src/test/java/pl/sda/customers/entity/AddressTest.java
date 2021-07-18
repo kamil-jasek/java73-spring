@@ -9,7 +9,7 @@ class AddressTest extends EntityBaseTest {
     @Test
     void shouldSaveAddressInDatabase() {
         // given
-        final var address = new Address("str", "Wawa", "01-500", "PL");
+        final var address = new Address("str", "Wawa", "01-520", "PL");
 
         // when
         persistAndClearCache(address);
