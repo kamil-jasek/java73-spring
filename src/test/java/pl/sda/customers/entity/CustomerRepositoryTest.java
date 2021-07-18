@@ -3,11 +3,10 @@ package pl.sda.customers.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
 
-class CustomerRepositoryTest extends RepositoryBaseTest<Customer, UUID> {
+class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
 
     @Test
     void shouldSaveCustomerInRepository() {

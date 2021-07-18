@@ -9,15 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-abstract class RepositoryBaseTest<TYPE, ID> {
+abstract class RepositoryBaseTest<REPOSITORY extends JpaRepository> {
 
     @Autowired
-    protected JpaRepository<TYPE, ID> repository;
+    protected REPOSITORY repository;
 
     @Autowired
     protected EntityManager em;
 
-    protected void saveAndClearCache(TYPE ...entities) {
+    protected void saveAndClearCache(Object ...entities) {
         repository.saveAllAndFlush(Arrays.asList(entities));
         em.clear();
     }
