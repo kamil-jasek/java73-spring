@@ -1,26 +1,13 @@
 package pl.sda.customers.entity;
 
-import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
-import javax.persistence.EntityManager;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-class CustomerRepositoryTest {
-
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private EntityManager em;
+class CustomerRepositoryTest extends RepositoryBaseTest<Customer, UUID> {
 
     @Test
     void shouldSaveCustomerInRepository() {
@@ -31,7 +18,7 @@ class CustomerRepositoryTest {
         saveAndClearCache(customer);
 
         // then
-        final var readCustomer = customerRepository.getById(customer.getId());
+        final var readCustomer = repository.getById(customer.getId());
         assertEquals(readCustomer, customer);
     }
 
@@ -46,7 +33,7 @@ class CustomerRepositoryTest {
         saveAndClearCache(customer);
 
         // then
-        final var readCustomer = customerRepository.getById(customer.getId());
+        final var readCustomer = repository.getById(customer.getId());
         assertEquals(customer.getAddresses(), readCustomer.getAddresses());
     }
 
@@ -59,14 +46,9 @@ class CustomerRepositoryTest {
         saveAndClearCache(customer1, customer2, customer3);
 
         // when
-        final var sortedCustomers = customerRepository.findAll(Sort.by("email"));
+        final var sortedCustomers = repository.findAll(Sort.by("email"));
 
         // then
         assertEquals(List.of(customer1, customer3, customer2), sortedCustomers);
-    }
-
-    private void saveAndClearCache(Customer ...customers) {
-        customerRepository.saveAllAndFlush(asList(customers));
-        em.clear();
     }
 }
