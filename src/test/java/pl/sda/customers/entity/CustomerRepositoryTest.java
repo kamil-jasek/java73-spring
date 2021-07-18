@@ -50,4 +50,19 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
         // then
         assertEquals(List.of(customer1, customer3, customer2), sortedCustomers);
     }
+
+    @Test
+    void shouldFindPersonByFirstAndLastName() {
+        // given
+        final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
+        final var customer2 = new Person("xyz@ab.pl", "Janek", "Kowal", "9203023020");
+        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var customers = repository.findAllByFirstNameIgnoreCaseLikeAndLastNameIgnoreCaseLike("jan%", "kowal%");
+
+        // then
+        assertEquals(List.of(customer1, customer2), customers);
+    }
 }
