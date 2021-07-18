@@ -13,10 +13,19 @@ interface CustomerRepository extends JpaRepository<Customer, UUID> {
     @Query("from Person p where upper(p.firstName) like upper(?1) and upper(p.lastName) like upper(?2)")
     List<Person> filterByPersonName(String firstName, String lastName);
 
-    List<Customer> findAllByEmailIgnoreCaseContains(String email);
+    List<Customer> findAllByEmailIgnoreCaseContains(String email); // -> contains -> like %?1%
 
     // select c.* from customers c inner join addresses a on a.customer_id = c.id where a.city = ?
     List<Customer> findAllByAddressesCityIgnoreCase(String city);
 
     // select c.* from customers c where (c.email = ? and c.status =?) or (c.type =? and c...)
+
+    @Query("from Company c join c.addresses a where upper(c.name) like upper(?1) and a.country = ?2")
+    List<Company> findCompaniesInCountry(String partOfName, String country);
+
+    @Query("select distinct a.street "
+        + "from Person p join p.addresses a "
+        + "where upper(p.lastName) like upper(?1) "
+        + "order by a.street")
+    List<String> findStreetsForLastName(String lastName);
 }

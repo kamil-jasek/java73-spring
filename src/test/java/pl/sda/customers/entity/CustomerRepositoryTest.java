@@ -113,4 +113,41 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
         // then
         assertEquals(List.of(customer1, customer3), customers);
     }
+
+    @Test
+    void shouldFindCompaniesInCountry() {
+        // given
+        final var customer1 = new Company("abc@ab.pl", "Test S.A.", "PL9393933");
+        customer1.addAddress(new Address("str", "Warszawa", "01-200", "PL"));
+        final var customer2 = new Company("xyz@ab.pl", "Kowalski S.A.", "9203023020");
+        customer2.addAddress(new Address("str", "Kraków", "03-400", "PL"));
+        final var customer3 = new Company("ert@ab.pl", "ABC S.A.", "PL203020222");
+        customer3.addAddress(new Address("str", "Berlin", "01-300", "DE"));
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var companies = repository.findCompaniesInCountry("%test%", "PL");
+
+        // then
+        assertEquals(List.of(customer1), companies);
+    }
+
+    @Test
+    void shouldFindStreetsForLastName() {
+        // given
+        final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
+        customer1.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
+        final var customer2 = new Person("xyz@ab.pl", "Janek", "Kowal", "9203023020");
+        customer2.addAddress(new Address("Krakowska", "Kraków", "03-400", "PL"));
+        customer2.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
+        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        customer3.addAddress(new Address("Strase", "Berlin", "01-300", "DE"));
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var streets = repository.findStreetsForLastName("kowal%");
+
+        // then
+        assertEquals(List.of("Krakowska", "Swietokrzyska"), streets);
+    }
 }
