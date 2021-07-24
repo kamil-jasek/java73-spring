@@ -1,6 +1,7 @@
 package pl.sda.customers.entity;
 
 import static org.springframework.util.Assert.notEmpty;
+import static org.springframework.util.Assert.notNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,6 +24,8 @@ public final class Order {
     @Id
     private UUID id;
 
+    private UUID customerId;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
@@ -34,15 +37,21 @@ public final class Order {
     private Order() {
     }
 
-    public Order(List<Product> products) {
+    public Order(UUID customerId, List<Product> products) {
+        notNull(customerId, "customer id is null");
         notEmpty(products, "product list is empty");
         this.id = UUID.randomUUID();
+        this.customerId = customerId;
         this.products = new ArrayList<>(products);
         this.status = OrderStatus.WAITING;
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
     }
 
     public OrderStatus getStatus() {
@@ -85,20 +94,21 @@ public final class Order {
             return false;
         }
         Order order = (Order) o;
-        return id.equals(order.id) && new HashSet<>(products).equals(new HashSet<>(order.products));
+        return id.equals(order.id) && customerId.equals(order.customerId) &&
+            new HashSet<>(products).equals(new HashSet<>(order.products));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, customerId);
     }
 
     @Override
     public String toString() {
         return "Order{" +
             "id=" + id +
+            ", customerId=" + customerId +
             ", status=" + status +
-            ", products=" + products +
             '}';
     }
 }
