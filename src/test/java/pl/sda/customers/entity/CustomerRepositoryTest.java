@@ -56,8 +56,8 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
     void shouldFindPersonByFirstAndLastName() {
         // given
         final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
-        final var customer2 = new Person("xyz@ab.pl", "Janek", "Kowal", "9203023020");
-        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        final var customer2 = new Person("xyz@ba.pl", "Janek", "Kowal", "9203023020");
+        final var customer3 = new Person("xyz@cb.pl", "Janisław", "Nowak", "9203023020");
         saveAndClearCache(customer1, customer2, customer3);
 
         // when
@@ -71,8 +71,8 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
     void shouldFilterByPersonName() {
         // given
         final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
-        final var customer2 = new Person("xyz@ab.pl", "Janek", "Kowal", "9203023020");
-        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        final var customer2 = new Person("xyz@ba.pl", "Janek", "Kowal", "9203023020");
+        final var customer3 = new Person("xyz@cb.pl", "Janisław", "Nowak", "9203023020");
         saveAndClearCache(customer1, customer2, customer3);
 
         // when
@@ -138,10 +138,10 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
         // given
         final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
         customer1.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
-        final var customer2 = new Person("xyz@ab.pl", "Janek", "Kowal", "9203023020");
+        final var customer2 = new Person("xyz@cb.pl", "Janek", "Kowal", "9203023020");
         customer2.addAddress(new Address("Krakowska", "Kraków", "03-400", "PL"));
         customer2.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
-        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        final var customer3 = new Person("xyz@as.pl", "Janisław", "Nowak", "9203023020");
         customer3.addAddress(new Address("Strase", "Berlin", "01-300", "DE"));
         saveAndClearCache(customer1, customer2, customer3);
 
@@ -157,10 +157,10 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
         // given
         final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
         customer1.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
-        final var customer2 = new Person("xyz@ab.pl", "Janek", "Tadzik", "9203023020");
+        final var customer2 = new Person("xyz@cb.pl", "Janek", "Tadzik", "9203023020");
         customer2.addAddress(new Address("Krakowska", "Kraków", "03-400", "PL"));
         customer2.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
-        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        final var customer3 = new Person("xyz@ka.pl", "Janisław", "Nowak", "9203023020");
         customer3.addAddress(new Address("Strase", "Berlin", "01-300", "DE"));
         saveAndClearCache(customer1, customer2, customer3);
 

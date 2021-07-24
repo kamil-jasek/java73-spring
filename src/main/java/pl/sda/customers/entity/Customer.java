@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,6 +27,7 @@ public abstract class Customer {
     @Id
     private UUID id;
 
+    @Column(unique = true)
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL)

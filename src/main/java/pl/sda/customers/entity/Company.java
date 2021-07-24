@@ -3,6 +3,7 @@ package pl.sda.customers.entity;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -11,6 +12,8 @@ import javax.persistence.Entity;
 public final class Company extends Customer {
 
     private String name;
+
+    @Column(unique = true)
     private String vat;
 
     @OnlyForJpa
