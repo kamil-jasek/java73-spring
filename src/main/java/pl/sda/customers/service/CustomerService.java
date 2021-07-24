@@ -2,7 +2,6 @@ package pl.sda.customers.service;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sda.customers.dto.CustomerId;
