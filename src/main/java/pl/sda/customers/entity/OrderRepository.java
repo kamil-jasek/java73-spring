@@ -20,4 +20,6 @@ interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query("select distinct p.name from Product p order by p.name")
     List<String> listAllUniqueProductNames();
+
+
 }

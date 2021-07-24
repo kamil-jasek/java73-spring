@@ -28,4 +28,11 @@ interface CustomerRepository extends JpaRepository<Customer, UUID> {
         + "where upper(p.lastName) like upper(?1) "
         + "order by a.street")
     List<String> findStreetsForLastName(String lastName);
+    
+    @Query(value = "select p.first_name, p.last_name, a.city "
+        + "from customers p "
+        + "inner join customer_addresses a on a.customer_id = p.id "
+        + "where p.customer_type = 'PERSON' and a.country = ?1 order by p.last_name, a.city",
+        nativeQuery = true)
+    List<Object[]> findPersonNameByCountry(String country);
 }

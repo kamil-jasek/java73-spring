@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue("PERSON")
 public final class Person extends Customer {
 
-    private String firstName;
+    private String firstName; // -> first_name
     private String lastName;
     private String pesel;
 

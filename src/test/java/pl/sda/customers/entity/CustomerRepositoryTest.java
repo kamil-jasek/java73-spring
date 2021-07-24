@@ -1,5 +1,6 @@
 package pl.sda.customers.entity;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -149,5 +150,27 @@ class CustomerRepositoryTest extends RepositoryBaseTest<CustomerRepository> {
 
         // then
         assertEquals(List.of("Krakowska", "Swietokrzyska"), streets);
+    }
+
+    @Test
+    void shouldFindPersonNameByCountry() {
+        // given
+        final var customer1 = new Person("xyz@ab.pl", "Jan", "Kowalski", "9203023020");
+        customer1.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
+        final var customer2 = new Person("xyz@ab.pl", "Janek", "Tadzik", "9203023020");
+        customer2.addAddress(new Address("Krakowska", "Kraków", "03-400", "PL"));
+        customer2.addAddress(new Address("Swietokrzyska", "Warszawa", "01-200", "PL"));
+        final var customer3 = new Person("xyz@ab.pl", "Janisław", "Nowak", "9203023020");
+        customer3.addAddress(new Address("Strase", "Berlin", "01-300", "DE"));
+        saveAndClearCache(customer1, customer2, customer3);
+
+        // when
+        final var personNames = repository.findPersonNameByCountry("PL");
+
+        // then
+        assertEquals(3, personNames.size());
+        assertArrayEquals(new Object[] { "Jan", "Kowalski", "Warszawa" }, personNames.get(0));
+        assertArrayEquals(new Object[] { "Janek", "Tadzik", "Kraków" }, personNames.get(1));
+        assertArrayEquals(new Object[] { "Janek", "Tadzik", "Warszawa" }, personNames.get(2));
     }
 }
