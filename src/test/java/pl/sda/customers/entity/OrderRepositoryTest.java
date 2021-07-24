@@ -1,8 +1,12 @@
 package pl.sda.customers.entity;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static pl.sda.customers.UuidUtil.asBytes;
 
+import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
 
@@ -112,5 +116,28 @@ class OrderRepositoryTest extends RepositoryBaseTest<OrderRepository> {
 
         // when
         assertEquals(List.of("abc", "bca", "cda"), repository.listAllUniqueProductNames());
+    }
+
+    @Test
+    void shouldSumOrdersInWaitingStatus() {
+        // given
+        final var order1 = new Order(List.of(new Product("abc", 1., 1)));
+        final var order2 = new Order(List.of(new Product("bca", 2., 1)));
+        final var order3 = new Order(List.of(new Product("cda", 3., 1)));
+        final var order4 = new Order(List.of(new Product("xyz", 4., 1),(new Product("jkl", 4., 1))));
+        final var order5 = new Order(List.of(new Product("xyz2", 5., 2)));
+        order2.sent();
+        order2.markDelivered();
+        order3.sent();
+        saveAndClearCache(order1, order2, order3, order4, order5);
+
+        //when
+        final var results = repository.getOrderSumInWaitingStatus();
+
+        // then
+        assertEquals(3, results.size());
+        assertArrayEquals(new Object[] { asBytes(order1.getId()), 1. }, results.get(0));
+        assertArrayEquals(new Object[] { asBytes(order4.getId()), 8. }, results.get(1));
+        assertArrayEquals(new Object[] { asBytes(order5.getId()), 10. }, results.get(2));
     }
 }
