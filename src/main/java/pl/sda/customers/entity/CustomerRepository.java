@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-interface CustomerRepository extends JpaRepository<Customer, UUID> {
+public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 
     // select * from customers where upper(first_name) like upper(?) and uppper(last_name) like upper(?)
     List<Person> findAllByFirstNameIgnoreCaseLikeAndLastNameIgnoreCaseLike(String firstName, String lastName);
@@ -35,4 +35,10 @@ interface CustomerRepository extends JpaRepository<Customer, UUID> {
         + "where p.customer_type = 'PERSON' and a.country = ?1 order by p.last_name, a.city",
         nativeQuery = true)
     List<Object[]> findPersonNameByCountry(String country);
+
+    @Query("select (count(c.id) > 0) from Customer c where upper(c.email) = upper(?1)")
+    boolean hasCustomerWithEmail(String email);
+
+    @Query("select (count(c.id) > 0) from Company c where upper(c.vat) = upper(?1)")
+    boolean hasCompanyWithVat(String vat);
 }

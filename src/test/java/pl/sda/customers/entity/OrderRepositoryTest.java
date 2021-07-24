@@ -2,11 +2,9 @@ package pl.sda.customers.entity;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pl.sda.customers.UuidUtil.asBytes;
+import static pl.sda.customers.util.UuidUtil.asBytes;
 
-import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
 

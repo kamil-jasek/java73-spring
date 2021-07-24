@@ -1,4 +1,4 @@
-package pl.sda.customers;
+package pl.sda.customers.util;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
