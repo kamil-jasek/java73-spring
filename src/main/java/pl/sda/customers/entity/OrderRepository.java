@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-interface OrderRepository extends JpaRepository<Order, UUID> {
+public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     List<Order> findAllByStatus(OrderStatus status); // select o.* from orders o where o.status = ?
 
@@ -26,4 +26,7 @@ interface OrderRepository extends JpaRepository<Order, UUID> {
         + "where o.status = 'WAITING' group by o.id order by sum(p.price * p.quantity)",
         nativeQuery = true)
     List<Object[]> getOrderSumInWaitingStatus();
+
+    @Query("select (count(c.id) > 0) from Customer c where c.id = ?1")
+    boolean customerExists(UUID customerId);
 }
