@@ -1,6 +1,7 @@
 package pl.sda.customers.service;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sda.customers.dto.MakeOrderForm;
 import pl.sda.customers.dto.OrderId;
+import pl.sda.customers.dto.ProductDto;
 import pl.sda.customers.entity.Order;
 import pl.sda.customers.entity.OrderRepository;
 import pl.sda.customers.entity.Product;
@@ -27,15 +29,14 @@ public class OrderService {
         if (!(orderRepository.customerExists(form.getCustomerId()))) {
             throw new CustomerNotExistsException("customer not exists: " + form.getCustomerId());
         }
-        final var order = new Order(form.getCustomerId(), mapProducts(form));
+        final var order = new Order(form.getCustomerId(), mapProducts(form.getProducts()));
         orderRepository.save(order);
         return new OrderId(order.getId());
     }
 
-    private List<Product> mapProducts(MakeOrderForm form) {
-        return form.getProducts()
-            .stream()
+    private List<Product> mapProducts(List<ProductDto> products) {
+        return products.stream()
             .map(p -> new Product(p.getName(), p.getPrice(), p.getQuantity()))
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 }

@@ -21,7 +21,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerId registerCompany(RegisterCompanyForm form) {
+    public CustomerId registerCompany(RegisterCompanyForm form) { // POJO - Plain old java object
         if (repository.hasCustomerWithEmail(form.getEmail())) {
             throw new EmailAlreadyExistsException("email already exists: " + form.getEmail());
         }
