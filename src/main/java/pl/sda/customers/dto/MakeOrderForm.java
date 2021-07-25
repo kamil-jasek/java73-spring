@@ -26,6 +26,12 @@ public final class MakeOrderForm {
         return products;
     }
 
+    public double getFullOrderPrice() {
+        return products.stream()
+            .mapToDouble(product -> product.getPrice() * product.getQuantity())
+            .sum();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

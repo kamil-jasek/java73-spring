@@ -2,6 +2,7 @@ package pl.sda.customers.entity;
 
 import static org.springframework.util.Assert.notEmpty;
 import static org.springframework.util.Assert.notNull;
+import static org.springframework.util.Assert.state;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +34,8 @@ public final class Order {
     @JoinColumn(name = "order_id")
     private List<Product> products;
 
+    private double deliveryCost;
+
     @OnlyForJpa
     private Order() {
     }
@@ -44,6 +47,13 @@ public final class Order {
         this.customerId = customerId;
         this.products = new ArrayList<>(products);
         this.status = OrderStatus.WAITING;
+        this.deliveryCost = 0;
+    }
+
+    public Order(UUID customerId, List<Product> products, double deliveryCost) {
+        this(customerId, products);
+        state(deliveryCost >= 0, "delivery cost is below zero");
+        this.deliveryCost = deliveryCost;
     }
 
     public UUID getId() {

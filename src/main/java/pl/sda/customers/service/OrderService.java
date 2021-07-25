@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sda.customers.dto.MakeOrderForm;
@@ -19,9 +19,12 @@ import pl.sda.customers.exception.CustomerNotExistsException;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final double defaultDeliveryCost;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository,
+        @Value("${order.default.delivery-cost}") double defaultDeliveryCost) {
         this.orderRepository = requireNonNull(orderRepository);
+        this.defaultDeliveryCost = defaultDeliveryCost;
     }
 
     @Transactional
@@ -29,7 +32,13 @@ public class OrderService {
         if (!(orderRepository.customerExists(form.getCustomerId()))) {
             throw new CustomerNotExistsException("customer not exists: " + form.getCustomerId());
         }
-        final var order = new Order(form.getCustomerId(), mapProducts(form.getProducts()));
+
+        double deliveryCost = this.defaultDeliveryCost;
+        if (form.getFullOrderPrice() > 250.) {
+            deliveryCost = 0.;
+        }
+
+        final var order = new Order(form.getCustomerId(), mapProducts(form.getProducts()), deliveryCost);
         orderRepository.save(order);
         return new OrderId(order.getId());
     }
