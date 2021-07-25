@@ -72,6 +72,10 @@ public final class Order {
         return new ArrayList<>(products);
     }
 
+    public double getDeliveryCost() {
+        return deliveryCost;
+    }
+
     void sent() {
         validateIsWaiting();
         status = OrderStatus.SENT;

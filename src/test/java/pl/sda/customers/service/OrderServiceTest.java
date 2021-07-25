@@ -1,5 +1,6 @@
 package pl.sda.customers.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,7 +24,7 @@ public class OrderServiceTest extends BaseServiceTest {
     private OrderRepository orderRepository;
 
     @Test
-    void shouldMakeOrder() {
+    void shouldMakeOrderWithDefaultDeliveryCost() {
         // given
         final var company = new Company("bca@wp.pl", "Comp S.A.", "PL98393993");
         persistAndClearCache(company);
@@ -34,7 +35,24 @@ public class OrderServiceTest extends BaseServiceTest {
 
         // then
         assertNotNull(orderId);
-        assertTrue(orderRepository.existsById(orderId.getId()));
+        final var createdOrder = orderRepository.getById(orderId.getId());
+        assertEquals(15., createdOrder.getDeliveryCost());
+    }
+
+    @Test
+    void shouldMakeOrderWithFreeDelivery() {
+        // given
+        final var company = new Company("bca@wp.pl", "Comp S.A.", "PL98393993");
+        persistAndClearCache(company);
+        final var form = new MakeOrderForm(company.getId(), List.of(new ProductDto("xyz", 251, 1)));
+
+        // when
+        final var orderId = orderService.makeOrder(form);
+
+        // then
+        assertNotNull(orderId);
+        final var createdOrder = orderRepository.getById(orderId.getId());
+        assertEquals(0., createdOrder.getDeliveryCost());
     }
 
     @Test
