@@ -1,6 +1,7 @@
 package pl.sda.customers;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import pl.sda.customers.entity.CustomerRepository;
 import pl.sda.customers.entity.Person;
 
 @Component
+@Profile("dev")
 class ExampleDataLoader {
 
     private final CustomerRepository repository;
