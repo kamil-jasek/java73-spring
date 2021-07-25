@@ -42,6 +42,11 @@ public final class Person extends Customer {
     }
 
     @Override
+    public String getTaxId() {
+        return pesel;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

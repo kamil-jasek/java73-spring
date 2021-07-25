@@ -63,6 +63,8 @@ public abstract class Customer {
 
     public abstract String getName();
 
+    public abstract String getTaxId();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

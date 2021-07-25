@@ -3,8 +3,10 @@ package pl.sda.customers.rest;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.sda.customers.dto.CustomerDto;
@@ -25,7 +27,8 @@ final class CustomerRestController {
         return ResponseEntity.ok(customerService.listAllCustomers()); // --> status code 200 (ok)
     }
 
-    void registerCompany() {
-
+    @GetMapping("/{customerId}")
+    ResponseEntity<CustomerDto> findById(@PathVariable UUID customerId) {
+        return ResponseEntity.ok(customerService.findById(customerId));
     }
 }

@@ -4,12 +4,15 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.sda.customers.dto.AddressDto;
 import pl.sda.customers.dto.CustomerDto;
 import pl.sda.customers.dto.CustomerId;
 import pl.sda.customers.dto.RegisterCompanyForm;
+import pl.sda.customers.entity.Address;
 import pl.sda.customers.entity.Company;
 import pl.sda.customers.entity.CustomerRepository;
 import pl.sda.customers.exception.EmailAlreadyExistsException;
@@ -43,6 +46,25 @@ public class CustomerService {
     public List<CustomerDto> listAllCustomers() {
         return repository.findAll().stream()
             .map(customer -> new CustomerDto(customer.getId(), customer.getEmail(), customer.getName()))
+            .collect(toList());
+    }
+
+    @Transactional(readOnly = true)
+    public CustomerDto findById(UUID customerId) {
+        final var customer = repository.getById(customerId);
+        return new CustomerDto(customer.getId(),
+            customer.getEmail(),
+            customer.getName(),
+            customer.getTaxId(),
+            mapAddresses(customer.getAddresses()));
+    }
+
+    private List<AddressDto> mapAddresses(List<Address> addresses) {
+        return addresses.stream()
+            .map(address -> new AddressDto(address.getStreet(),
+                address.getCity(),
+                address.getZipCode(),
+                address.getCountry()))
             .collect(toList());
     }
 }

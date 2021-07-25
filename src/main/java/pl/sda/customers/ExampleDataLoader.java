@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import pl.sda.customers.entity.Address;
 import pl.sda.customers.entity.Company;
 import pl.sda.customers.entity.CustomerRepository;
 import pl.sda.customers.entity.Person;
@@ -23,6 +24,8 @@ class ExampleDataLoader {
     @EventListener
     public void onApplicationLoad(ApplicationReadyEvent event) {
         repository.save(new Company("abc@wp.pl", "Comp S.A.", "PL838399393"));
-        repository.save(new Person("awe@qw.pl", "Jan", "Kowalski", "9039389383"));
+        final var person = new Person("awe@qw.pl", "Jan", "Kowalski", "9039389383");
+        person.addAddress(new Address("str", "WAWA", "22-333", "PL"));
+        repository.save(person);
     }
 }

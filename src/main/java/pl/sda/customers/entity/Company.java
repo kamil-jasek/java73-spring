@@ -35,6 +35,11 @@ public final class Company extends Customer {
     }
 
     @Override
+    public String getTaxId() {
+        return vat;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
