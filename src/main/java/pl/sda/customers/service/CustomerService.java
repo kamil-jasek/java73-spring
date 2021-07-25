@@ -1,9 +1,13 @@
 package pl.sda.customers.service;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.sda.customers.dto.CustomerDto;
 import pl.sda.customers.dto.CustomerId;
 import pl.sda.customers.dto.RegisterCompanyForm;
 import pl.sda.customers.entity.Company;
@@ -33,5 +37,12 @@ public class CustomerService {
         final var company = new Company(form.getEmail(), form.getName(), form.getVat());
         repository.save(company);
         return new CustomerId(company.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomerDto> listAllCustomers() {
+        return repository.findAll().stream()
+            .map(customer -> new CustomerDto(customer.getId(), customer.getEmail(), customer.getName()))
+            .collect(toList());
     }
 }

@@ -61,6 +61,8 @@ public abstract class Customer {
         }
     }
 
+    public abstract String getName();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

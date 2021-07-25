@@ -32,6 +32,11 @@ public final class Person extends Customer {
         return lastName;
     }
 
+    @Override
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+
     public String getPesel() {
         return pesel;
     }
