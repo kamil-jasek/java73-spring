@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.sda.customers.dto.AddressDto;
 import pl.sda.customers.dto.CustomerDto;
 import pl.sda.customers.service.CustomerService;
 
@@ -47,7 +48,29 @@ class CustomerRestControllerTest {
     }
 
     @Test
-    void shouldGetSingleCustomer() {
-        // Implement test
+    void shouldGetSingleCustomer() throws Exception {
+        // given
+        final var customerId = UUID.randomUUID();
+        when(customerService.findById(customerId))
+            .thenReturn(new CustomerDto(customerId,
+                "abc@wp.pl",
+                "Comp S.A.",
+                "PL9393933",
+                List.of(new AddressDto("str", "Wawa", "22-200", "PL"))));
+
+        // when
+        mvc.perform(get("/api/customers/" + customerId))
+            .andDo(print())
+        // then
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(customerId.toString())))
+            .andExpect(jsonPath("$.email", is("abc@wp.pl")))
+            .andExpect(jsonPath("$.name", is("Comp S.A.")))
+            .andExpect(jsonPath("$.taxId", is("PL9393933")))
+            .andExpect(jsonPath("$.addresses.length()", is(1)))
+            .andExpect(jsonPath("$.addresses[0].street", is("str")))
+            .andExpect(jsonPath("$.addresses[0].city", is("Wawa")))
+            .andExpect(jsonPath("$.addresses[0].zipCode", is("22-200")))
+            .andExpect(jsonPath("$.addresses[0].country", is("PL")));
     }
 }
