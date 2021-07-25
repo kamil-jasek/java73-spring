@@ -45,4 +45,9 @@ class CustomerRestControllerTest {
             .andExpect(jsonPath("$[0].email", is("avc@wp.pl")))
             .andExpect(jsonPath("$[0].name", is("Comp S.A.")));
     }
+
+    @Test
+    void shouldGetSingleCustomer() {
+        // Implement test
+    }
 }
