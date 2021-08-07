@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,6 +36,9 @@ class CustomerRestControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    private final String testBasicAuthToken = "Basic dGVzdDp0ZXN0";
+    private final String adminBasicAuthToken = "Basic YWRtaW46YWRtaW4=";
+
     @Test
     void shouldGetListOfCustomers() throws Exception {
         // given
@@ -44,7 +48,8 @@ class CustomerRestControllerTest {
         ));
 
         // when
-        mvc.perform(get("/api/customers"))
+        mvc.perform(get("/api/customers")
+                .header(AUTHORIZATION, testBasicAuthToken))
             .andDo(print())
         // then
             .andExpect(status().isOk())
@@ -66,7 +71,8 @@ class CustomerRestControllerTest {
                 List.of(new AddressDto("str", "Wawa", "22-200", "PL"))));
 
         // when
-        mvc.perform(get("/api/customers/" + customerId))
+        mvc.perform(get("/api/customers/" + customerId)
+                .header(AUTHORIZATION, testBasicAuthToken))
             .andDo(print())
         // then
             .andExpect(status().isOk())
@@ -88,7 +94,8 @@ class CustomerRestControllerTest {
             .thenThrow(new EntityNotFoundException());
 
         // when
-        mvc.perform(get("/api/customers/8111289b-33be-4729-bb90-e378b1d48033"))
+        mvc.perform(get("/api/customers/8111289b-33be-4729-bb90-e378b1d48033")
+                .header(AUTHORIZATION, testBasicAuthToken))
         // then
             .andExpect(status().isNotFound());
     }
@@ -101,6 +108,7 @@ class CustomerRestControllerTest {
 
         // when
         mvc.perform(post("/api/customers")
+            .header(AUTHORIZATION, adminBasicAuthToken)
             .content(registerCompanyJson())
             .contentType(MediaType.APPLICATION_JSON))
         // then
@@ -116,6 +124,7 @@ class CustomerRestControllerTest {
 
         // when
         mvc.perform(post("/api/customers")
+            .header(AUTHORIZATION, adminBasicAuthToken)
             .content(registerCompanyJson())
             .contentType(MediaType.APPLICATION_JSON))
         // then
