@@ -1,6 +1,7 @@
 package pl.sda.customers.rest;
 
 import java.time.Instant;
+import javax.persistence.EntityNotFoundException;
 import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,5 +20,10 @@ final class BusinessServiceExceptionHandler {
     @ExceptionHandler(BusinessServiceException.class)
     public ResponseEntity<ErrorMessage> handle(BusinessServiceException ex) {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage(), Instant.now()));
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handle(EntityNotFoundException ex) {
+        return ResponseEntity.notFound().build();
     }
 }

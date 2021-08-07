@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -78,6 +79,18 @@ class CustomerRestControllerTest {
             .andExpect(jsonPath("$.addresses[0].city", is("Wawa")))
             .andExpect(jsonPath("$.addresses[0].zipCode", is("22-200")))
             .andExpect(jsonPath("$.addresses[0].country", is("PL")));
+    }
+
+    @Test
+    void shouldGet404WhenCustomerNotExists() throws Exception {
+        // given
+        when(customerService.findById(any()))
+            .thenThrow(new EntityNotFoundException());
+
+        // when
+        mvc.perform(get("/api/customers/8111289b-33be-4729-bb90-e378b1d48033"))
+        // then
+            .andExpect(status().isNotFound());
     }
 
     @Test
