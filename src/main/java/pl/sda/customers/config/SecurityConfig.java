@@ -1,11 +1,16 @@
 package pl.sda.customers.config;
 
+import static pl.sda.customers.config.SecurityUserRole.CUSTOMER_READ;
+import static pl.sda.customers.config.SecurityUserRole.CUSTOMER_WRITE;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -14,6 +19,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/**").authenticated()
             .antMatchers("/public/**").permitAll()
             .and()
+            .csrf().disable()
             .httpBasic();
     }
 
@@ -22,10 +28,10 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
             .withUser("admin")
             .password("{noop}admin")
-            .roles("ADMIN")
+            .roles(CUSTOMER_READ, CUSTOMER_WRITE)
             .and()
             .withUser("test")
             .password("{noop}test")
-            .roles();
+            .roles(CUSTOMER_READ);
     }
 }
