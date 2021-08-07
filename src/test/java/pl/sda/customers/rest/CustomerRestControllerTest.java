@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.sda.customers.dto.AddressDto;
 import pl.sda.customers.dto.CustomerDto;
@@ -50,7 +52,7 @@ class CustomerRestControllerTest {
     @Test
     void shouldGetSingleCustomer() throws Exception {
         // given
-        final var customerId = UUID.randomUUID();
+        final var customerId = UUID.fromString("7c29e663-11ff-4975-8136-b09be1f5d379");
         when(customerService.findById(customerId))
             .thenReturn(new CustomerDto(customerId,
                 "abc@wp.pl",
@@ -72,5 +74,23 @@ class CustomerRestControllerTest {
             .andExpect(jsonPath("$.addresses[0].city", is("Wawa")))
             .andExpect(jsonPath("$.addresses[0].zipCode", is("22-200")))
             .andExpect(jsonPath("$.addresses[0].country", is("PL")));
+    }
+
+    @Test
+    void shouldRegisterCompany() throws Exception {
+        // given
+        final var customerId = "cb3d7313-dd5d-4dd2-87c6-e04845d5fe6a";
+
+        // when
+        mvc.perform(post("/api/customers")
+            .content("{"
+                + "\"email\": \"abc@wp.pl\","
+                + "\"name\": \"Comp S.A.\","
+                + "\"vat\": \"PL920200220\""
+                + "}")
+            .contentType(MediaType.APPLICATION_JSON))
+        // then
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(customerId)));
     }
 }
