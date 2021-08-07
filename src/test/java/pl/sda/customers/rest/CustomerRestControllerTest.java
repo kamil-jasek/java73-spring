@@ -2,6 +2,7 @@ package pl.sda.customers.rest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.sda.customers.dto.AddressDto;
 import pl.sda.customers.dto.CustomerDto;
 import pl.sda.customers.dto.CustomerId;
+import pl.sda.customers.exception.EmailAlreadyExistsException;
 import pl.sda.customers.service.CustomerService;
 
 @WebMvcTest(controllers = CustomerRestController.class)
@@ -86,14 +88,34 @@ class CustomerRestControllerTest {
 
         // when
         mvc.perform(post("/api/customers")
-            .content("{"
-                + "\"email\": \"abc@wp.pl\","
-                + "\"name\": \"Comp S.A.\","
-                + "\"vat\": \"PL920200220\""
-                + "}")
+            .content(registerCompanyJson())
             .contentType(MediaType.APPLICATION_JSON))
         // then
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id", is(customerId)));
+    }
+
+    @Test
+    void shouldInformAboutExistingEmailWhenRegisteringCompany() throws Exception {
+        // given
+        when(customerService.registerCompany(any()))
+            .thenThrow(new EmailAlreadyExistsException("email already exists: abc@wp.pl"));
+
+        // when
+        mvc.perform(post("/api/customers")
+            .content(registerCompanyJson())
+            .contentType(MediaType.APPLICATION_JSON))
+        // then
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message", is("email already exists: abc@wp.pl")))
+            .andExpect(jsonPath("$.errorTime", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z")));
+    }
+
+    private String registerCompanyJson() {
+        return "{"
+            + "\"email\": \"abc@wp.pl\","
+            + "\"name\": \"Comp S.A.\","
+            + "\"vat\": \"PL920200220\""
+            + "}";
     }
 }
