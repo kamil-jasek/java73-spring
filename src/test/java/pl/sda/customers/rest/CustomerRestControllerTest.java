@@ -2,6 +2,7 @@ package pl.sda.customers.rest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.sda.customers.dto.AddressDto;
 import pl.sda.customers.dto.CustomerDto;
+import pl.sda.customers.dto.CustomerId;
 import pl.sda.customers.service.CustomerService;
 
 @WebMvcTest(controllers = CustomerRestController.class)
@@ -80,6 +82,7 @@ class CustomerRestControllerTest {
     void shouldRegisterCompany() throws Exception {
         // given
         final var customerId = "cb3d7313-dd5d-4dd2-87c6-e04845d5fe6a";
+        when(customerService.registerCompany(any())).thenReturn(new CustomerId(UUID.fromString(customerId)));
 
         // when
         mvc.perform(post("/api/customers")
